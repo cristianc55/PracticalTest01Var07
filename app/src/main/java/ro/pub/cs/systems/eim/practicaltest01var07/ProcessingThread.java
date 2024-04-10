@@ -32,8 +32,6 @@ public class ProcessingThread extends Thread {
         secondNumber = secondNumber2;
         thirdNumber = thirdNumber2;
         fourthNumber = fourthNumber2;
-
-
     }
 
     @Override
@@ -49,10 +47,12 @@ public class ProcessingThread extends Thread {
     private void sendMessage() {
         Intent intent = new Intent();
 
+        Log.d("rippp_thread", "firstNumber: " + firstNumber +
+                " secondNumber: " + secondNumber + " thirdNumber: " + thirdNumber
+                + " fourthNumber: " + fourthNumber);
         intent.putExtra("message", new String("first number " + firstNumber
                 + " second number " + secondNumber + " third number " + thirdNumber + " fourth number " + fourthNumber));
         context.sendBroadcast(intent);
-//        context.sendBroadcast(intent);
     }
 
     private void sleep() {

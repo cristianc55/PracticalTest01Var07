@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
@@ -21,6 +22,7 @@ public class PracticalTest01Var07Service extends Service {
     public void onCreate() {
         super.onCreate();
 
+        Log.d("Service", "onCreate");
         if (Build.VERSION.SDK_INT >= 26) {
             String CHANNEL_ID = "my_channel_01";
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
@@ -43,6 +45,9 @@ public class PracticalTest01Var07Service extends Service {
         int secondNumber = intent.getIntExtra(Constants.RANDOM_INPUT2, -1);
         int thirdNumber = intent.getIntExtra(Constants.RANDOM_INPUT3, -1);
         int fourthNumber = intent.getIntExtra(Constants.RANDOM_INPUT4, -1);
+
+        Log.d("Service", "first number " + firstNumber + " second number "
+                        + secondNumber + " third number " + thirdNumber + " fourth number " + fourthNumber );
         processingThread = new ProcessingThread(this, firstNumber, secondNumber, thirdNumber, fourthNumber);
         processingThread.start();
         return Service.START_REDELIVER_INTENT;

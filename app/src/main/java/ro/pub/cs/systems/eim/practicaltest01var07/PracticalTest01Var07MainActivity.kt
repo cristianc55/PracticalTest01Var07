@@ -3,6 +3,7 @@ package ro.pub.cs.systems.eim.practicaltest01var07
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -32,6 +33,8 @@ class PracticalTest01Var07MainActivity : AppCompatActivity() {
     private lateinit var inputText3: EditText
     private lateinit var inputText4: EditText
 
+    private val intentFilter = IntentFilter()
+
 
     private val messageBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -39,9 +42,16 @@ class PracticalTest01Var07MainActivity : AppCompatActivity() {
                 Log.d(Constants.BROADCAST_RECEIVER_TAG, it.action.toString())
                 Log.d(Constants.BROADCAST_RECEIVER_TAG, it.getStringExtra("message").toString())
 
+                Log.d("rippp", "")
                 val regex = "\\d+".toRegex()
                 val numbers = regex.findAll(it.getStringExtra("message").toString()).map { it.value.toInt() }.toList()
 
+                Log.d("Receiver", "onReceive: ${numbers[0]} ${numbers[1]} ${numbers[2]} ${numbers[3]}")
+
+                inputText1.setText(numbers[0].toString())
+                inputText2.setText(numbers[1].toString())
+                inputText3.setText(numbers[2].toString())
+                inputText4.setText(numbers[3].toString())
                 Toast.makeText(PracticalTest01Var07MainActivity(), "The service has stopped with the following message: ${numbers.joinToString()}", Toast.LENGTH_LONG).show()
             }
         }
@@ -82,6 +92,27 @@ class PracticalTest01Var07MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(messageBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(messageBroadcastReceiver, intentFilter)
+        }
+    }
+
+    override fun onPause() {
+        unregisterReceiver(messageBroadcastReceiver)
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        val intent = Intent(applicationContext, PracticalTest01Var07Service::class.java)
+        applicationContext.stopService(intent)
+        super.onDestroy()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
